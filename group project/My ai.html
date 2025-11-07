@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my ai - FOOD DELIVERY</title>
+    <link rel="icon" href="imagep/ICON.png" type="image/x-icon">
+
+
+    <style>
+        /* Global Styles for DeepSeek/Dark Theme */
+        :root {
+            --primary-color: rgb(194, 179, 179); /* izina rya al */
+            --secondary-color: #3333ac; /* Deep Indigo Blue (Dark DeepSeek BG) */
+            --pintol-bg: #8c9191; /* A lighter shade of the main blue */
+            --user-bg: #535551; /* ibara ryinyuma aho umu User yandika */
+            --text-color: #fbfbff; /* White text ibara ryamagambo */
+            --container-width: 900px;
+            --input-bg: rgb(114, 30, 30); /* ibara ryohejuru ahandiste pintol ai */
+            --border-color: #101011; /* ibara ryokuri border */
+            --black-bg: #050505; /* ibara ryinyuma ya vb */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--black-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Main Container */
+        .container {
+            width: 95%;
+            max-width: var(--container-width);
+            background: var(--secondary-color);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 90vh;
+            border: 2px solid var(--border-color);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--input-bg);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        header h1 {
+            margin-bottom: 5px;
+            font-size: 2.5em;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px rgb(136, 71, 71); /* ibara ryokuri ai igicucu cyayo */
+        }
+        header p {
+            margin: 0;
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* pintol Icon ( - stylized 'S' inside a circle) */
+        .pintol-icon {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--pintol-bg); /* shadow yo kuri profile aya s */
+            color: var(--text-color);
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 10px;
+            /* Simple SVG-like styling for a tech look */
+            box-shadow: 0 0 10px var(--pintol-bg);
+        }
+        .pintol-icon-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+
+        /* Chat Window */
+        .chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #000000; /* Slightly darker chat background */
+        }
+
+        /* Scrollbar Styling */
+        .chat-window::-webkit-scrollbar { width: 8px; }
+        .chat-window::-webkit-scrollbar-track { background: rgb(7, 7, 7); }
+        .chat-window::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
+
+        /* Individual Messages */
+        .message-container {
+            width: 100%;
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .message-container.user-msg {
+            justify-content: flex-end;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(197, 27, 27, 0.63);
+            display: inline-block;
+        }
+
+        .pintol-message {
+            background-color: var(--pintol-bg);
+            color: var(--text-color);
+            margin-right: auto;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .user-message {
+            background-color: var(--user-bg);
+            color: var(--text-color);
+            margin-left: auto;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+        
+        /* Loading/Searching Indicator */
+        .loading-message {
+            background-color: #3b3b3b;
+            color: #ccc;
+            font-style: italic;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: fit-content;
+        }
+
+        /* Sources/Citations */
+        .sources {
+            margin-top: 10px;
+            border-top: 1px solid #444;
+            padding-top: 5px;
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        .sources a {
+            color: #b39ddb; /* Light purple link */
+            text-decoration: none;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        /* Chat Input Form */
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background-color: var(--input-bg);
+            border-top: 2px solid var(--border-color);
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 12px 18px;
+            border: 1px solid #11fc09;
+            border-radius: 25px;
+            font-size: 1.05em;
+            margin-right: 12px;
+            background-color: #000000;
+            color: var(--text-color);
+        }
+
+        #send-btn {
+            /* Orange-Red Button Styling */
+            background-color: var(--border-color); 
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.05em;
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 0 15px rgb(197, 139, 139);
+        }
+
+        #send-btn:hover {
+            background-color: #555352; 
+            transform: translateY(-1px);
+        }
+        #send-btn:active {
+            transform: translateY(0);
+        }
+         .video-bg1{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <video  autoplay loop muted plays-inline class="video-bg1">
+        <source src="background/video2.mp4" type="video/mp4" higth="">
+         </video>
+    <div class="container">        
+        <header>
+            <h1>PINTOL AI</h1>
+            <p>Welcome to my AI.</p>
+        </header>
+
+        <div class="chat-window" id="chat-window">
+            <div class="message-container">
+                <div class="message pintol-message">
+                    <div class="pintol-icon-container">
+                        <span class="pintol-icon">P</span>
+                        <strong>PINTOL AI:</strong>
+                    </div>
+                    <p>Muraho! Nitwa PINTOL. Ndi umufasha wawe w'ubwenge buhangano nashizweho muku kunganira.mbaza ikibazo icyo aricyo cyose.</p>
+                    <p>Hello! I'm PINTOL. I'm your intelligent assistant.ask any question you have.</p>
+                </div>
+            </div>
+        </div>
+
+        <form id="chat-form" class="chat-input">
+            <input type="text" id="user-input" placeholder="ASK YOUR question..." required>
+            <button type="submit" id="send-btn">
+                <i class="fas fa-search"></i> ASK
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Aho ushira API Key Yawe (Insertion Point)
+        // INAMA IKOMEYE: Ntukoreshe API Key yawe y'ukuri hano mu buryo bweruye mu rubuga rugaragara (Frontend). 
+        // Iyi ngero y'urufunguzo ntirukora: AIzaSyBAkuazxDT05TuHtFUNWvTgKLDauzpPlLc
+        const apiKey = "AIzaSyBAkuazxDT05TuHtFUNWvTgKLDauzpPlLc"; 
+        
+        // IKOSORA #1: Twongeyemo '?key=' + apiKey kuri URL kugira ngo REST API ikore neza.
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        // IHEREZO ryo gushyira API Key yawe iri hejuru.
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatForm = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatWindow = document.getElementById('chat-window');
+            const sendBtn = document.getElementById('send-btn');
+            const maxRetries = 5;
+
+            chatForm.addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                const message = userInput.value.trim();
+
+                if (message) {
+                    // 1. Display user message
+                    appendMessage(message, 'user-message');
+                    userInput.value = '';
+                    userInput.disabled = true;
+                    sendBtn.disabled = true;
+                    
+                    // 2. Call the AI with search grounding
+                    getSelemanResponse(message);
+                }
+            });
+
+            /**
+             * Adds a new message (text and type) to the chat window.
+             */
+            function appendMessage(text, type, sources = []) {
+                const messageContainer = document.createElement('div');
+                messageContainer.classList.add('message-container');
+                if (type === 'user-message') {
+                    messageContainer.classList.add('user-msg');
+                }
+
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', type);
+                
+                // Add icon for Seleman's messages
+                if (type === 'seleman-message') {
+                    const iconContainer = document.createElement('div');
+                    iconContainer.classList.add('seleman-icon-container');
+                    iconContainer.innerHTML = '<span class="seleman-icon">S</span> <strong>Seleman AI:</strong>';
+                    messageDiv.appendChild(iconContainer);
+                }
+
+                // Add the text content
+                const p = document.createElement('p');
+                p.innerHTML = text.replace(/\n/g, '<br>'); // Handle newlines
+                messageDiv.appendChild(p);
+
+                // Add source attribution if available
+                if (sources.length > 0) {
+                    const sourcesDiv = document.createElement('div');
+                    sourcesDiv.classList.add('sources');
+                    sourcesDiv.innerHTML = '<strong>Inkomoko (Sources):</strong>';
+                    sources.forEach(source => {
+                        const link = document.createElement('a');
+                        link.href = source.uri;
+                        link.target = '_blank';
+                        link.textContent = source.title || source.uri;
+                        sourcesDiv.appendChild(link);
+                    });
+                    messageDiv.appendChild(sourcesDiv);
+                }
+                
+                messageContainer.appendChild(messageDiv);
+                chatWindow.appendChild(messageContainer);
+                chatWindow.scrollTop = chatWindow.scrollHeight; 
+            }
+
+            /**
+             * Generates the response using the Gemini API with Google Search grounding.
+             */
+            async function getSelemanResponse(userQuery) {
+                let loadingElement; ;
+
+                // Show Loading Message (Seleman is searching)
+                loadingElement = appendLoadingMessage("PINTOL GENERATING... (PINTOL is searching...)");
+
+                try {
+                    // System Prompt: Mentions GROUP 1 as creator.
+                    const systemPrompt = "You are PINTOL, an intelligent problem-solving assistant created by GROUP 1, who is also known as FOOD DELIVERY. You are fluent in Kinyarwanda and English. If a user asks who created you or who made you, you MUST state that your creator is Group 1. When answering, first perform a Google search. Use the search results to provide a quick, efficient, and factual answer. If the user asks in Kinyarwanda, respond fully in Kinyarwanda using the context of the search results.";
+                    
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        tools: [{ "google_search": {} }], 
+                        systemInstruction: {
+                            parts: [{ text: systemPrompt }]
+                        },
+                    };
+
+                    for (let attempt = 0; attempt < maxRetries; attempt++) {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            const candidate = result.candidates?.[0];
+
+                            if (candidate && candidate.content?.parts?.[0]?.text) {
+                                // Extract the generated text and sources
+                                const text = candidate.content.parts[0].text;
+                                let sources = [];
+                                const groundingMetadata = candidate.groundingMetadata;
+                                if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                                    sources = groundingMetadata.groundingAttributions
+                                        .map(attribution => ({
+                                            uri: attribution.web?.uri,
+                                            title: attribution.web?.title,
+                                        }))
+                                        .filter(source => source.uri && source.title); 
+                                }
+
+                                // Remove loading message and display final answer
+                                loadingElement.parentElement.remove(); 
+                                appendMessage(text, 'PINTOL-message', sources);
+                                return;
+                            }
+                        } else if (response.status === 429) {
+                            // Too Many Requests, wait and retry (Exponential Backoff)
+                            const delay = Math.pow(2, attempt) * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            // IKOSORA #2: Twakoresheje template literal (backticks) kugira ngo intero ikore neza.
+                            throw new Error(`API Error: Status ${response.status}`);
+                        }
+                    }
+                    // If all retries fail
+                    throw new Error("Failed to get response after multiple retries.");
+
+                } catch (error) {
+                    console.error("Seleman AI Error:", error);
+                    loadingElement.parentElement.remove();
+                    const errorMessage = "PINTOL yagize ikibazo mu gushakisha rebe niba internet yawe ifunguye. Nyamuneka gerageza kongera kubaza nyuma gato. (PINTOL encountered a search error or failed to cheake your internet. Please try asking again shortly.)";
+                    appendMessage(errorMessage, 'PINTOL-message');
+                } finally {
+                    // Re-enable input regardless of success/failure
+                    userInput.disabled = false;
+                    sendBtn.disabled = false;
+                    userInput.focus();
+                }
+            }
+            
+            /**
+             * Helper function to append a temporary loading message.
+             */
+            function appendLoadingMessage(text) {
+                const messageContainer = document.createElement('div');
+                messageContainer.classList.add('message-container');
+                const loadingDiv = document.createElement('div');
+                loadingDiv.classList.add('message', 'loading-message');
+                loadingDiv.textContent = text;
+                messageContainer.appendChild(loadingDiv);
+
+                chatWindow.appendChild(messageContainer);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                return loadingDiv;
+            }
+        });
+    </script>
+</body>
+</html>

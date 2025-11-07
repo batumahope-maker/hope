@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iyandikishirize - FOOD DELIVERY</title>
+    <link rel="icon" href="imagep/ICON.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary: #a32626ff;
+            --secondary: #ce3030ff;
+            --dark: #141414;
+            --light: #fcfffe;
+            --gray: #84838f;
+            --light-dark: #2c2c2c;
+            --white: white;
+            --error: #e74c3c; /* Added error color for better validation */
+            --success: #2ecc71; /* Added success color for better validation */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .video-bg1 {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            min-width: 100%; /* Ensure video covers the background */
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            object-fit: cover; /* Important for video background */
+        }
+        
+        /* Header */
+        header {
+            background: var(--dark);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; /* Ensure header is above the video */
+            z-index: 10;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            color: var(--primary);
+        }
+        
+        /* Registration Form Section */
+        .registration-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1; /* Ensure form is above the video */
+        }
+
+        /* Add overlay for better form readability on video background */
+        .registration-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(20, 20, 20, 0.6); /* Dark semi-transparent overlay */
+            z-index: 0;
+        }
+        
+        .registration-form {
+            background: var(--light-dark);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative; /* Ensure form is above the overlay */
+            z-index: 2;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .form-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .form-header p {
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 4px;
+            border: 1px solid var(--gray);
+            background: var(--dark);
+            color: var(--light);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .form-group.error input, .form-group.error select {
+            border-color: var(--error);
+        }
+        
+        .form-group.success input, .form-group.success select {
+            border-color: var(--success);
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+        }
+        
+        .form-footer button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .form-footer button:hover {
+            background: var(--secondary);
+        }
+        
+        .form-footer button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 45px; /* Adjusted to be better aligned */
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--light-dark);
+            padding: 30px 5%;
+            margin-top: auto;
+            position: relative; /* Ensure footer is above the video */
+            z-index: 10;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+            color: var(--gray); /* Applied base color to list items */
+        }
+        
+        .footer-column a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: var(--light);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--dark);
+            border-radius: 50%;
+            color: var(--light);
+            transition: background 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray);
+            color: var(--gray);
+        }
+        .button1{
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 8px;           
+            cursor: pointer;
+             width: 100%;
+            padding: 14px;
+             font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s;
+            text-align: left;
+        }
+         .button1:hover {
+            background: var(--secondary);
+        }
+        
+        .button1:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+             /* Navigation was removed in HTML, so no need to hide here */
+            
+            .registration-form {
+                padding: 30px 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .password-toggle {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .registration-form {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-icon"><i class="fa fa-cutlery"></i></div> <h1><span style="color: rgb(209, 24, 24);">FOOD</span><span style="color: rgb(255, 255, 255);">DELIVERY</span></h1>
+        </div>
+        <a href="index.HTML"> <button class="button1">HOME</button></a>
+    </header>
+    
+    <section class="registration-container">
+        <video autoplay loop muted plays-inline class="video-bg1">
+            <source src="background/video2.mp4" type="video/mp4">
+        </video>
+        
+        <div class="registration-form">
+            <div class="form-header">
+                <h2>Iyandikishe</h2>
+                <p>TANGIRA GUTUMIZA</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">Izina ribanza</label>
+                        <input type="text" id="firstName" placeholder="Andika izina ry'ibanze">
+                        <div class="error-message" id="firstNameError">Andika neza izina ryawe (byibura inyuguti 2).</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Izina rikurikira</label>
+                        <input type="text" id="lastName" placeholder="Andika izina rikurikira">
+                        <div class="error-message" id="lastNameError">Izina rikurikira rikosore (byibura inyuguti 2).</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Imeyili</label>
+                    <input type="email" id="email" placeholder="Andika imeyili yawe">
+                    <div class="error-message" id="emailError">Imeyili ntabwo ari yo. Andika imeyili itunganye.</div>
+                    <div class="success-message" id="emailSuccess">Imeyili niyo.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Nimero ya telephone</label>
+                    <input type="tel" id="phone" placeholder="Andika numero ya telephone">
+                    <div class="error-message" id="phoneError">Nimero ya telephone ntabwo ari yo. Andika numero itunganye.</div>
+                    <div class="success-message" id="phoneSuccess">Nimero ya telephone niyo.</div>
+                </div>                
+                
+                <div class="form-group">
+                    <label for="password">Ijambobanga</label>
+                    <input type="password" id="password" placeholder="Andika ijambobanga">
+                    <span class="password-toggle" id="passwordToggle">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                    <div class="error-message" id="passwordError">Ijambobanga rirakenewe kandi rigomba kuba inyuguti 6 cyangwa irutaho.</div>
+                    <div class="success-message" id="passwordSuccess">Ijambobanga ni ryo.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Emeza ijambobanga</label>
+                    <input type="password" id="confirmPassword" placeholder="Andika ijambobanga nanone">
+                    <span class="password-toggle" id="confirmPasswordToggle" style="top: 45px;">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                    <div class="error-message" id="confirmPasswordError"></div> <div class="success-message" id="confirmPasswordSuccess"></div> </div> 
+
+                <div class="form-group">
+                    <label for="location">Aho utuye</label>
+                    <input type="text" id="location" placeholder="Andika aho utuye">
+                    <div class="error-message" id="locationError">Andika neza aho utuye (byibura inyuguti 3).</div>
+                    <div class="success-message" id="locationSuccess">Aho utuye ni ho.</div>
+                </div>           
+                
+                <div class="form-footer">
+                    <button type="submit" id="submitButton" onclick="alert('Murakoze kwifatanya natwe. ibyo mwasabye birabageraho vuba.')">OHEREZA</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h1><p style="color: rgb(194, 12, 12);">FOOD</p>
+                    <p style="color: rgb(255, 255, 255);">DELIVERY</p></h1>
+                <p>TUMIZA IBIRYO BYIZA KANDI BYIHUSE.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>UBWOKO</h3>
+                <ul>
+                    <li><a href="#">Raice</a></li>
+                    <li><a href="#">Ama-Burger</a></li>
+                    <li><a href="#">Inkoko</a></li>
+                    <li><a href="#">Ifiriti</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Twandikire</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Kigali, Rwanda</li>
+                    <li><i class="fas fa-phone"></i> +250 794213145</li>
+                    <li><i class="fas fa-envelope"></i> FOODDELIVERY@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>© 2025 FOOD DELIVERY. Developed by Group 1.</p>
+        </div>
+    </footer>
+
+<script>
+    // Dukoresha "document.getElementById" kugira ngo dufate ibice bya form (form elements)
+    const form = document.getElementById('registrationForm');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const locationInput = document.getElementById('location');
+
+    // Dushinga buri kosa/ubutumwa bwiza
+    const firstNameError = document.getElementById('firstNameError');
+    const lastNameError = document.getElementById('lastNameError');
+    const emailError = document.getElementById('emailError');
+    const emailSuccess = document.getElementById('emailSuccess');
+    const phoneError = document.getElementById('phoneError');
+    const phoneSuccess = document.getElementById('phoneSuccess');
+    const passwordError = document.getElementById('passwordError');
+    const passwordSuccess = document.getElementById('passwordSuccess');
+    const locationError = document.getElementById('locationError');
+    const locationSuccess = document.getElementById('locationSuccess');
+
+    const passwordToggle = document.getElementById('passwordToggle');
+    const confirmPasswordToggle = document.getElementById('confirmPasswordToggle');
+
+    // Imikorere yo kugaragaza amakosa
+    function setError(element, messageElement, isValid) {
+        const formGroup = element.parentElement;
+        if (isValid) {
+            formGroup.classList.remove('error');
+            // Success message is handled separately in some cases
+        } else {
+            formGroup.classList.add('error');
+            formGroup.classList.remove('success');
+            messageElement.style.display = 'block';
+        }
+    }
+
+    // Imikorere yo kugaragaza ko byagenze neza (success)
+    function setSuccess(element, messageElement) {
+        const formGroup = element.parentElement;
+        formGroup.classList.remove('error');
+        formGroup.classList.add('success');
+        messageElement.style.display = 'block';
+    }
+    
+    // Imikorere yo kugenzura Izina ribanza (First Name)
+    function validateFirstName() {
+        const value = firstNameInput.value.trim();
+        const isValid = value.length >= 2;
+        setError(firstNameInput, firstNameError, isValid);
+        
+        // Hide success message on error or if empty
+        firstNameInput.parentElement.querySelector('.success-message')?.style.display = 'none';
+        
+        return isValid;
+    }
+
+    // Imikorere yo kugenzura Izina rikurikira (Last Name)
+    function validateLastName() {
+        const value = lastNameInput.value.trim();
+        const isValid = value.length >= 2;
+        setError(lastNameInput, lastNameError, isValid);
+
+        // Hide success message on error or if empty
+        lastNameInput.parentElement.querySelector('.success-message')?.style.display = 'none';
+
+        return isValid;
+    }
+
+    // Imikorere yo kugenzura Imeyili (Email)
+    function validateEmail() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Uburyo bwa regex bwo kugenzura imeyili
+        const value = emailInput.value.trim();
+        const isValid = emailRegex.test(value);
+
+        if (!isValid) {
+            setError(emailInput, emailError, false);
+            emailSuccess.style.display = 'none';
+        } else {
+            setError(emailInput, emailError, true); // Hide error
+            setSuccess(emailInput, emailSuccess); // Show success
+        }
+        return isValid;
+    }
+
+    // Imikorere yo kugenzura Nimero ya Telephone (Phone Number)
+    function validatePhone() {
+        // Regex yoroshye - igomba kuba ifite imibare 10-15
+        const phoneRegex = /^\+?\d{10,15}$/; 
+        const value = phoneInput.value.trim();
+        const isValid = phoneRegex.test(value);
+
+        if (!isValid) {
+            setError(phoneInput, phoneError, false);
+            phoneSuccess.style.display = 'none';
+        } else {
+            setError(phoneInput, phoneError, true); // Hide error
+            setSuccess(phoneInput, phoneSuccess); // Show success
+        }
+        return isValid;
+    }
+
+    // Imikorere yo kugenzura Ijambobanga (Password)
+    function validatePassword() {
+        const value = passwordInput.value.trim();
+        const isValid = value.length >= 6; // Igenzura ry'uburebure
+        
+        if (!isValid) {
+            setError(passwordInput, passwordError, false);
+            passwordSuccess.style.display = 'none';
+        } else {
+            setError(passwordInput, passwordError, true); // Hide error
+            setSuccess(passwordInput, passwordSuccess); // Show success
+        }
+        return isValid;
+    }
+
+    // Imikorere yo kugenzura Ijambobanga ryemeza
+    function validateConfirmPassword() {
+        const passwordValue = passwordInput.value;
+        const confirmValue = confirmPasswordInput.value;
+        const errorElement = confirmPasswordInput.parentElement.querySelector('#confirmPasswordError');
+        const successElement = confirmPasswordInput.parentElement.querySelector('#confirmPasswordSuccess');
+
+        
+        // Igenzura ry'uburebure
+        if (confirmValue.length < 6) {
+             setError(confirmPasswordInput, errorElement, false);
+             errorElement.textContent = "Emeza ijambobanga rirakenewe kandi rigomba kuba inyuguti 6 cyangwa irutaho.";
+             successElement.style.display = 'none';
+             return false;
+        }
+
+        // Igenzura ry'uko ayo majambobanga ahura
+        if (passwordValue !== confirmValue) {
+            setError(confirmPasswordInput, errorElement, false);
+            errorElement.textContent = "Amajambobanga ntabwo ahura.";
+            successElement.style.display = 'none';
+            return false;
+        }
+        
+        // Niba byose byagenze neza
+        setError(confirmPasswordInput, errorElement, true); // Hide error
+        errorElement.style.display = 'none';
+
+        successElement.textContent = "Amajambobanga arahura. Niyo.";
+        setSuccess(confirmPasswordInput, successElement);
+        
+        return true;
+    }
+
+    // Imikorere yo kugenzura Aho Utuye (Location)
+    function validateLocation() {
+         const value = locationInput.value.trim();
+         const isValid = value.length >= 3; 
+         
+         if (!isValid) {
+             setError(locationInput, locationError, false);
+             locationSuccess.style.display = 'none';
+         } else {
+             setError(locationInput, locationError, true); // Hide error
+             setSuccess(locationInput, locationSuccess); // Show success
+         }
+         
+         return isValid;
+    }
+
+
+    // Umurimo ukuru wo kugenzura byose
+    function validateForm() {
+        // Kugenzura buri kintu cyose
+        const isFirstNameValid = validateFirstName();
+        const isLastNameValid = validateLastName();
+        const isEmailValid = validateEmail();
+        const isPhoneValid = validatePhone();
+        const isPasswordValid = validatePassword();
+        // Twita kuri "confirm password" nyuma yo kugenzura "password"
+        const isConfirmPasswordValid = validateConfirmPassword(); 
+        const isLocationValid = validateLocation();
+        
+        // Byose biba byagenze neza gusa iyo ibintu byose byagenze neza
+        return isFirstNameValid && isLastNameValid && isEmailValid && isPhoneValid && isPasswordValid && isConfirmPasswordValid && isLocationValid;
+    }
+
+    // Kugenzura buri gihe iyo umukiriya ahinduye ibintu (Live validation)
+    firstNameInput.addEventListener('input', validateFirstName);
+    lastNameInput.addEventListener('input', validateLastName);
+    emailInput.addEventListener('input', validateEmail);
+    phoneInput.addEventListener('input', validatePhone);
+    passwordInput.addEventListener('input', validatePassword);
+    confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+    locationInput.addEventListener('input', validateLocation);
+    
+    // Kugenzura byose iyo umukiriya akoze "submit"
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Birakumira ko form yoherezwa mu buryo busanzwe
+        
+        if (validateForm()) {
+            // Niba byose byagenze neza:
+            alert('Kwiyandikisha byagenze neza! Murakoze, ' + firstNameInput.value + '! Mutangire gutumiza ibiryo.');
+            // Hano niho wajya gushyira code yo kohereza form muri server (e.g. AJAX/Fetch)
+            // For now, we reset the form
+            form.reset(); 
+            // Clear all validation styles/messages after reset
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('success', 'error');
+                group.querySelectorAll('.error-message, .success-message').forEach(msg => {
+                    msg.style.display = 'none';
+                });
+            });
+        } else {
+            // Niba hari amakosa:
+            alert('Hari amakosa kuri form. Nyamuneka yasukure mbere yo kongera kugezayo.');
+        }
+    });
+
+    // Imikorere yo guhisha/kugaragaza ijambobanga
+    function togglePasswordVisibility(inputElement, toggleElement) {
+        const icon = toggleElement.querySelector('i');
+        if (inputElement.type === 'password') {
+            inputElement.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            inputElement.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // Gushyiraho ibyo gukora iyo ukanze ku gihisha/kigaragaza (toggles)
+    passwordToggle.addEventListener('click', function() {
+        togglePasswordVisibility(passwordInput, passwordToggle);
+    });
+
+    confirmPasswordToggle.addEventListener('click', function() {
+        togglePasswordVisibility(confirmPasswordInput, confirmPasswordToggle);
+    });
+    
+</script>
+</body>
+</html>
